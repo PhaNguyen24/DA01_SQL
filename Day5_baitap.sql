@@ -9,7 +9,7 @@ SELECT count(*)-count(DISTINCT(city)) from station;
 --SELECT CEILING(AVG(salary) - AVG(REPLACE(salary,0,''))) FROM employees;
 
 --BÀI 4 -- KHÔNG BIẾT BỊ LỖI Ở ĐÂU NHƯNG KHI CHÈN ROUND VÀO THÌ KO CHẠY RA, HIC
-SELECT ROUND(SUM(item_count * order_occurrences)/sum(order_occurrences),1) AS mean
+SELECT ROUND(CAST(SUM(item_count * order_occurrences)/sum(order_occurrences) AS DECIMAL),1) AS mean
 FROM items_per_order;
 
 --BÀI 5

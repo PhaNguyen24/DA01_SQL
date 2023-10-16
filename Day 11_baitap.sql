@@ -26,9 +26,37 @@ WHERE a.activity_type IN ('send','open')
 GROUP BY b.age_bucket;
 
 --BÀI 4
-SELECT *
---Customer_id,
+SELECT Customer_id
 FROM customer_contracts as a
-JOIN products as b ON a.product_id	=b.product_id	
-WHERE product_category in (Analytics,Containers,Compute)
---GROUP BY customer_id	;
+LEFT JOIN products as b ON a.product_id	=b.product_id	
+GROUP BY customer_id
+HAVING COUNT(DISTINCT product_category)=3;
+
+--BÀI 5
+SELECT e1.reports_to as employee_id, 
+e2.name,
+COUNT(e1.reports_to) as reports_count,
+ROUND(AVG(e1.age),0) as average_age
+ FROM
+Employees AS e1
+JOIN Employees  AS e2 ON e1.reports_to = e2.employee_id
+GROUP BY e1.reports_to
+ORDER BY employee_id;
+
+--BÀI 6
+SELECT p.product_name,
+SUM(o.unit) AS unit    
+FROM Products p
+LEFT JOIN Orders o
+ON p.product_id = o.product_id
+WHERE EXTRACT(month from order_date) = '02'
+AND EXTRACT(year from order_date) = '2020'
+GROUP BY p.product_name
+HAVING  SUM(unit)>=100;
+
+--BÀI 7
+SELECT p.page_id
+FROM pages as p LEFT JOIN page_likes as l  ON p.page_id=l.page_id
+GROUP BY p.page_id
+HAVING COUNT(l.page_id) = 0
+ORDER BY page_id; 

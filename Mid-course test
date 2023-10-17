@@ -41,14 +41,14 @@ GROUP BY first_name,last_name
 ORDER BY COUNT(*) DESC;
 
 --BÀI 6
---SOLUTION 1: Hiện DS các địa chỉ không liên quan đến khách hàng, rồi đếm tay số lượng
+--SOLUTION 1: Hiện DS các địa chỉ không liên quan đến khách hàng, rồi đếm số lượng
 SELECT a.address,  c.customer_id
 FROM address a
 LEFT JOIN customer c ON a.address_id=c.address_id
 WHERE c.customer_id is null
 GROUP BY a.address,c.customer_id;
 
--- SOLUTION 2: Nếu ko đếm tay thì làm cách này ^^
+-- SOLUTION 2: Nếu ko đếm  thì làm cách này ^^
 SELECT 
 SUM(CASE WHEN customer_id is null THEN 1 ELSE 0 END) as so_luong
 FROM address a

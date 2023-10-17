@@ -1,0 +1,81 @@
+--CÂU 1
+SELECT DISTINCT replacement_cost
+FROM film
+ORDER BY replacement_cost;
+
+--CÂU 2
+SELECT 
+CASE WHEN replacement_cost < 20 THEN 'low'
+WHEN replacement_cost BETWEEN 20 AND 25 THEN 'medium'
+ELSE 'high'
+END category,
+COUNT(*) as so_luong
+FROM film
+GROUP BY category;
+
+--CÂU 3
+SELECT f.film_id as title,
+f.length,
+c.name as category_name
+FROM film f
+JOIN film_category fc ON fc.film_id=f.film_id
+JOIN category c ON c.category_id=fc.category_id
+WHERE c.name in ('Drama','Sports')
+ORDER BY length DESC;
+
+--CÂU 4
+SELECT 
+c.name as category_name,
+COUNT(*) as so_luong
+FROM film f
+JOIN film_category fc ON fc.film_id=f.film_id
+JOIN category c ON c.category_id=fc.category_id
+GROUP BY c.name
+ORDER BY COUNT(*) DESC;
+
+--CÂU 5
+SELECT first_name,last_name,
+COUNT(*) as so_luong
+FROM actor a JOIN film_actor f ON a.actor_id=f.actor_id
+GROUP BY first_name,last_name
+ORDER BY COUNT(*) DESC;
+
+--BÀI 6
+--SOLUTION 1: Hiện DS các địa chỉ không liên quan đến khách hàng, rồi đếm tay số lượng
+SELECT a.address,  c.customer_id
+FROM address a
+LEFT JOIN customer c ON a.address_id=c.address_id
+WHERE c.customer_id is null
+GROUP BY a.address,c.customer_id;
+
+-- SOLUTION 2: Nếu ko đếm tay thì làm cách này ^^
+SELECT 
+SUM(CASE WHEN customer_id is null THEN 1 ELSE 0 END) as so_luong
+FROM address a
+LEFT JOIN customer c ON a.address_id=c.address_id
+
+--BÀI 7
+SELECT c.city,
+SUM(p.amount) as doanh_thu
+FROM city c
+JOIN address a ON c.city_id = a.city_id
+JOIN customer cus ON cus.address_id= a.address_id
+JOIN payment p ON p.customer_id = cus.customer_id
+GROUP BY c.city
+ORDER BY doanh_thu DESC;
+
+--BÀI 8 - THÀNH PHỐ CỦA ĐẤT NƯỚC NÀO ĐẠT DOANH THU THẤP NHẤT
+
+SELECT c.city || ', ' || cnt.country as city_country,
+SUM(p.amount) as doanh_thu
+FROM city c
+JOIN address a ON c.city_id = a.city_id
+JOIN customer cus ON cus.address_id= a.address_id
+JOIN payment p ON p.customer_id = cus.customer_id
+JOIN country cnt ON c.country_id = cnt.country_id
+GROUP BY c.city || ', ' || cnt.country
+ORDER BY doanh_thu ASC;
+
+
+
+

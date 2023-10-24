@@ -14,8 +14,10 @@ ALTER COLUMN orderlinenumber TYPE integer USING orderlinenumber::integer;
 ALTER TABLE public.sales_dataset_rfm_prj
 ALTER COLUMN sales TYPE numeric USING sales::numeric;
 
---ALTER TABLE public.sales_dataset_rfm_prj
---ALTER COLUMN orderdate TIMESTAMP USING 'dd/mm/yyyy hh:mm'::TIMESTAMP;
+
+ALTER TABLE public.sales_dataset_rfm_prj
+ALTER COLUMN orderdate TIMESTAMP USING orderdate::TIMESTAMP;
+--đoạn này ko chạy được, nhưng ko biết cách sửa, huhu
 
 ALTER TABLE public.sales_dataset_rfm_prj
 ALTER COLUMN msrp TYPE numeric USING msrp::numeric;
@@ -110,9 +112,7 @@ where abs((quantityordered-avg)/stddev) >3
 
 P2: XỬ LÝ OUTLIER
 -- XÓA
-  --với lệnh DELETE ko nên chạy trước khi bài được review
-
-
+  --với lệnh DELETE ko nên chạy trước khi bài được review--> xóa sau vậy
 
 
 --THAY THẾ BẰNG GIÁ TRỊ TRUNG BÌNH

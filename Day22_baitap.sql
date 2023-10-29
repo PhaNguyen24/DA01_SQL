@@ -47,35 +47,28 @@ WITH cte AS
   MIN(created_at) OVER (PARTITION BY user_id) as first_puchase_date,
  created_at
  FROM bigquery-public-data.thelook_ecommerce.order_items
- WHERE status ='Complete')
- ),
-cte2 as (
+ WHERE status ='Complete'
+)
+ )
+
+ ,cte2 as (
  SELECT cohort_date, index,
   COUNT(DISTINCT user_id) as cnt,
   SUM (sale_price) as revenue
  FROM cte
- GROUp BY 1,2)
+ WHERE index <=4
+ GROUp BY 1,2
+ ORDER BY cohort_date)
 
 ,customer_cohort AS (
  SELECT cohort_date,
  SUM(case when index = 1 then cnt else 0 end) as t1,
  SUM(case when index = 2 then cnt else 0 end) as t2,
  SUM(case when index = 3 then cnt else 0 end) as t3,
- SUM(case when index = 4 then cnt else 0 end) as t4,
- SUM(case when index = 5 then cnt else 0 end) as t5,
- SUM(case when index = 6 then cnt else 0 end) as t6,
- SUM(case when index = 7 then cnt else 0 end) as t7,
- SUM(case when index = 8 then cnt else 0 end) as t8,
- SUM(case when index = 9 then cnt else 0 end) as t9,
- SUM(case when index = 10 then cnt else 0 end) as t10,
- SUM(case when index = 11 then cnt else 0 end) as t11,
- SUM(case when index = 12 then cnt else 0 end) as t12,
-  SUM(case when index = 13 then cnt else 0 end) as t13
-
+ SUM(case when index = 4 then cnt else 0 end) as t4
  FROM cte2
- --WHERE LEFT(cohort_date,4) = '2019'
- GROUp BY cohort_date
-  ORDER BY cohort_date
+ GROUP BY cohort_date
+ ORDER BY cohort_date
 )
 
 --retention cohort
@@ -84,16 +77,7 @@ SELECT cohort_date,
 ROUND(100.00* t1/t1,2)||'%' t1,
 ROUND(100.00* t2/t1,2)||'%' t2,
 ROUND(100.00* t3/t1,2)||'%' t3,
-ROUND(100.00* t4/t1,2)||'%' t4,
-ROUND(100.00* t5/t1,2)||'%' t5,
-ROUND(100.00* t6/t1,2)||'%' t6,
-ROUND(100.00* t7/t1,2)||'%' t7,
-ROUND(100.00* t8/t1,2)||'%' t8,
-ROUND(100.00* t9/t1,2)||'%' t9,
-ROUND(100.00* t10/t1,2)||'%' t10,
-ROUND(100.00* t11/t1,2)||'%' t11,
-ROUND(100.00* t12/t1,2)||'%' t12,
-ROUND(100.00* t13/t1,2)||'%' t13,
+ROUND(100.00* t4/t1,2)||'%' t4
 FROM customer_cohort)
 
 --churn cohort
@@ -101,14 +85,5 @@ SELECT cohort_date,
 (100-ROUND(100.00* t1/t1,2))||'%' t1,
 (100 - ROUND(100.00* t2/t1,2))||'%' t2,
 (100-ROUND(100.00* t3/t1,2))||'%' t3,
-(100-ROUND(100.00* t4/t1,2))||'%' t4,
-(100-ROUND(100.00* t5/t1,2))||'%' t5,
-(100-ROUND(100.00* t6/t1,2))||'%' t6,
-(100-ROUND(100.00* t7/t1,2))||'%' t7,
-(100-ROUND(100.00* t8/t1,2))||'%' t8,
-(100-ROUND(100.00* t9/t1,2))||'%' t9,
-(100-ROUND(100.00* t10/t1,2))||'%' t10,
-(100-ROUND(100.00* t11/t1,2))||'%' t11,
-(100-ROUND(100.00* t12/t1,2))||'%' t12,
-(100-ROUND(100.00* t13/t1,2))||'%' t13
+(100-ROUND(100.00* t4/t1,2))||'%' t4
 FROM customer_cohort

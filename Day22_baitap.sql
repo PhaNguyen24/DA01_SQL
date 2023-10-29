@@ -83,7 +83,7 @@ FROM customer_cohort)
 --churn cohort
 SELECT cohort_date,
 (100-ROUND(100.00* t1/t1,2))||'%' t1,
-(100 - ROUND(100.00* t2/t1,2))||'%' t2,
+(100-ROUND(100.00* t2/t1,2))||'%' t2,
 (100-ROUND(100.00* t3/t1,2))||'%' t3,
 (100-ROUND(100.00* t4/t1,2))||'%' t4
 FROM customer_cohort
